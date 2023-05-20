@@ -1,7 +1,13 @@
+trigger:
+- feature-ms-pabloSepulveda-mensaje
+
 pool:
   vmImage: ubuntu-latest
 
 steps:
+- script: |
+      git fetch --unshallow
+  displayName: 'convert to non-shallow clone' 
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
