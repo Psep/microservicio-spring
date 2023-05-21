@@ -2,8 +2,8 @@ trigger:
 - feature-ms-pabloSepulveda-mensaje
 
 jobs:
-- job: microservicio-spring-pipeline
-  displayName: 'microservicio-spring-pipeline'
+- job: MicroservicioSpringPipeline
+  displayName: 'microservicio spring pipeline'
   pool:
    vmImage: ubuntu-latest
   steps:
@@ -66,7 +66,7 @@ jobs:
 
 - job: Deploy
   displayName: 'Deploy to Kubernetes'
-  dependsOn: Pipeline
+  dependsOn: MicroservicioSpringPipeline
   pool: 'Default'
   steps:
   - task: Bash@3
