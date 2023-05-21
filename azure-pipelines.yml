@@ -28,3 +28,23 @@ jobs:
         pathToSources: '$(System.DefaultWorkingDirectory)/src/main/java/'
         reportDirectory: '$(System.DefaultWorkingDirectory)/target/site/jacoco'
         failIfCoverageEmpty: true
+
+- job: CodeReview
+  displayName: 'Code Review'
+  dependsOn: Build
+  steps:
+  - task: SonarCloudPrepare@1
+    displayName: 'SonarCloud Prepare'
+    inputs:
+      SonarCloud: 'DevOps Project'
+      organization: 'psep'
+      scannerMode: 'CLI'
+      projectKey: 'Psep_microservicio-spring'
+      projectName: 'microservicio-spring'
+  
+  - task: SonarCloudAnalyze@1
+
+  - task: SonarCloudPublish@1
+    inputs:
+      pollingTimeoutSec: '300'
+
