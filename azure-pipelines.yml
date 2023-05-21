@@ -62,7 +62,7 @@ jobs:
       repository: 'psep/testing-web-complete'
       command: 'buildAndPush'
       Dockerfile: '**/Dockerfile'
-      tags: '$(Build.BuildId)'
+#      tags: '$(Build.BuildId)'
 
 - job: Deploy
   displayName: 'Deploy to Kubernetes'
@@ -70,12 +70,14 @@ jobs:
   pool: 'Default'
   steps:
   - task: Bash@3
+    displayName: 'Tag image replace'
     inputs:
       targetType: 'inline'
       script: |
         cat app-deployment.yaml
-        echo $(Build.BuildId)
-        echo $Build.BuildId
+        echo "Cambiando tag de deployment"
+        sed -i "s|_tag_|$(Build.BuildId)|g" app-deployment.yaml
+        cat app-deployment.yaml
   - task: Kubernetes@1
     displayName: 'Deploy pod'
     inputs:
