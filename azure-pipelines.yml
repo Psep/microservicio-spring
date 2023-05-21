@@ -53,4 +53,14 @@ jobs:
       testResultsFiles: '**/surefire-reports/TEST-*.xml'
       goals: 'clean package'
       sonarQubeRunAnalysis: true
-
+  
+- job: Deploy
+  displayName: 'Deploy'
+  dependsOn: CodeReview
+  steps:
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Docker Hub Psep'
+      repository: 'psep/testing-web-complete'
+      command: 'buildAndPush'
+      Dockerfile: '**/Dockerfile'
