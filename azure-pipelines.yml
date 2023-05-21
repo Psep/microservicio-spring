@@ -57,6 +57,7 @@ jobs:
       repository: 'psep/testing-web-complete'
       command: 'buildAndPush'
       Dockerfile: '**/Dockerfile'
+      tags: 'latest'
 
 - job: Deploy
   displayName: 'Deploy to Kubernetes'
