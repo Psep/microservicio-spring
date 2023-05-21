@@ -10,13 +10,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class GreetingService {
 	
-	public String greet() {
-		try {
-			Cipher.getInstance("DES");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+	public String greet() throws NoSuchAlgorithmException, NoSuchPaddingException {
+		Cipher.getInstance("DES");
 		return Constantes.MENSAJE;
 	}
 
