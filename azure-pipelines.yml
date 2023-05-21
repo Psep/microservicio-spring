@@ -38,7 +38,7 @@ jobs:
     inputs:
       SonarCloud: 'DevOps Project'
       organization: 'psep'
-      scannerMode: 'CLI'
+      scannerMode: 'Other'
       projectKey: 'Psep_microservicio-spring'
       projectName: 'microservicio-spring'
   
