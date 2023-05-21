@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: testing-web-complete
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: testing-web-complete
+  template:
+    metadata:
+      labels:
+        app: testing-web-complete
+    spec:
+      containers:
+        - name: testing-web-complete
+          image: psep/testing-web-complete:latest
+          ports:
+            - containerPort: 8080
