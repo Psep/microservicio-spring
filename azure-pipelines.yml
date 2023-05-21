@@ -2,15 +2,16 @@ trigger:
 - feature-ms-pabloSepulveda-mensaje
 
 jobs:
-- job: Pipeline
-  displayName: 'Pipeline'
+- job: microservicio-spring-pipeline
+  displayName: 'microservicio-spring-pipeline'
   pool:
    vmImage: ubuntu-latest
   steps:
-  - script: |
-      git fetch --unshallow
-    displayName: 'convert to non-shallow clone' 
+#  - script: |
+#      git fetch --unshallow
+#    displayName: 'convert to non-shallow clone' 
   - task: Maven@3
+    displayName: 'Build'
     inputs:
       mavenPomFile: 'pom.xml'
       mavenOptions: '-Xmx3072m'
@@ -21,6 +22,7 @@ jobs:
       testResultsFiles: '**/surefire-reports/TEST-*.xml'
       goals: 'clean test'
   - task: PublishCodeCoverageResults@1
+    displayName: 'Publish code coverage results (JaCoCo)'
     inputs:
         codeCoverageTool: 'JaCoCo'
         summaryFileLocation: '$(System.DefaultWorkingDirectory)/target/site/jacoco/jacoco.xml'
@@ -37,6 +39,7 @@ jobs:
       projectName: 'microservicio-spring'
 
   - task: Maven@3
+    displayName: 'Code Review (SonarCloud)'
     inputs:
       mavenPomFile: 'pom.xml'
       mavenOptions: '-Xmx3072m'
@@ -48,28 +51,39 @@ jobs:
       goals: 'clean package'
       sonarQubeRunAnalysis: true
   - task: Docker@2
+    displayName: 'Docker Login'
     inputs:
       containerRegistry: 'Docker Hub Psep'
       command: 'login'
   - task: Docker@2
+    displayName: 'Docker registry image'
     inputs:
       containerRegistry: 'Docker Hub Psep'
       repository: 'psep/testing-web-complete'
       command: 'buildAndPush'
       Dockerfile: '**/Dockerfile'
-      tags: 'latest'
+      tags: '$(Build.BuildId)'
 
 - job: Deploy
   displayName: 'Deploy to Kubernetes'
   dependsOn: Pipeline
   pool: 'Default'
   steps:
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        cat app-deployment.yaml
+        echo $(Build.BuildId)
+        echo $Build.BuildId
   - task: Kubernetes@1
+    displayName: 'Deploy pod'
     inputs:
       connectionType: 'None'
       command: 'apply'
       arguments: '-f app-deployment.yaml'
   - task: Kubernetes@1
+    displayName: 'Apply app service'
     inputs:
       connectionType: 'None'
       command: 'apply'
