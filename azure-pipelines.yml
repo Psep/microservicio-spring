@@ -26,6 +26,26 @@ jobs:
         pathToSources: '$(System.DefaultWorkingDirectory)/src/main/java/'
         reportDirectory: '$(System.DefaultWorkingDirectory)/target/site/jacoco'
         failIfCoverageEmpty: true
+
+  - task: Bash@3
+    displayName: 'Validate Coverage 85%'
+    inputs:
+      targetType: 'inline'
+      script: |
+        jacocoXmlPath='$(System.DefaultWorkingDirectory)/target/site/jacoco/jacoco.xml'
+        threshold=85
+
+        coverage=$(grep -oP 'covered="\K[0-9]+' $jacocoXmlPath)
+        missed=$(grep -oP 'missed="\K[0-9]+' $jacocoXmlPath)
+
+        coveragePercentage=$(bc -l <<< "scale=2; $coverage / ($coverage + $missed) * 100")
+
+        if (( $(echo "$coveragePercentage >= $threshold" | bc -l) )); then
+          echo "La cobertura ($coveragePercentage%) es mayor o igual a $threshold%"
+        else
+          echo "La cobertura ($coveragePercentage%) es menor a $threshold%"
+          exit 1
+        fi
   - task: SonarCloudPrepare@1
     displayName: 'SonarCloud Prepare'
     inputs:
