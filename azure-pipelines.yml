@@ -29,4 +29,4 @@ jobs:
         reportDirectory: '$(System.DefaultWorkingDirectory)/target/site/jacoco'
         failIfCoverageEmpty: true
     condition: |
-     and(succeeded(), greater(variables['Build.CodeCoverageSummary.lineCoverage'], 85.0))
+     and(succeeded(), ge(variables['Build.CodeCoverageSummary.lineCoverage'], 85.0))
