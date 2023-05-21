@@ -86,5 +86,19 @@ jobs:
       connectionType: 'None'
       command: 'apply'
       arguments: '-f k8s/app-service.yaml'
+    
+  - task: TaurusRunner@0
+    inputs:
+      taurusConfig: |
+        execution:
+         - scenario:
+             requests:
+              script: test.jmx
+      jmeterHome: '/home/psep/labdevops/apache-jmeter-5.5'
+      jmeterPath: '/home/psep/labdevops/apache-jmeter-5.5/bin'
+      jmeterVersion: '5.5'
+      outputDir: 'taurus-output'
+      
+  - script: jmeter -n -t $(System.DefaultWorkingDirectory)/jmeter/test.jmx -l $(System.DefaultWorkingDirectory)/results.jtl
 
   
