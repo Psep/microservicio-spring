@@ -47,6 +47,10 @@ jobs:
       testResultsFiles: '**/surefire-reports/TEST-*.xml'
       goals: 'package'
       sonarQubeRunAnalysis: true
+  - task: sonarcloud-buildbreaker@2
+    inputs:
+      SonarCloud: 'DevOps Project'
+      organization: 'psep'
   - task: Docker@2
     displayName: 'Docker Login'
     inputs:
@@ -93,19 +97,3 @@ jobs:
       script: |
         /home/psep/labdevops/apache-jmeter-5.5/bin/jmeter -n -t jmeter/test.jmx -l jmeter/results.jtl
         cat jmeter/results.jtl
-
-#  - task: TaurusRunner@0
-#    inputs:
-#      taurusConfig: |
-#        execution:
-#         - scenario:
-#             requests:
-#              script: test.jmx
-#      jmeterHome: '/home/psep/labdevops/apache-jmeter-5.5'
-#      jmeterPath: '/home/psep/labdevops/apache-jmeter-5.5/bin'
-#      jmeterVersion: '5.5'
-#      outputDir: 'taurus-output'
-      
-#  - script: jmeter -n -t $(System.DefaultWorkingDirectory)/jmeter/test.jmx -l $(System.DefaultWorkingDirectory)/results.jtl
-
-  
