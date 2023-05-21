@@ -57,3 +57,21 @@ jobs:
       repository: 'psep/testing-web-complete'
       command: 'buildAndPush'
       Dockerfile: '**/Dockerfile'
+
+- job: Deploy
+  displayName: 'Deploy to Kubernetes'
+  dependsOn: Pipeline
+  pool: 'Default'
+  steps:
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'None'
+      command: 'apply'
+      arguments: '-f app-deployment.yaml'
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'None'
+      command: 'apply'
+      arguments: '-f app-service.yaml'
+
+  
