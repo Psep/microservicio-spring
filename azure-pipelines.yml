@@ -2,8 +2,8 @@ trigger:
 - feature-ms-pabloSepulveda-mensaje
 
 jobs:
-- job: Build
-  displayName: 'Build'
+- job: Pipeline
+  displayName: 'Pipeline'
   pool:
    vmImage: ubuntu-latest
   steps:
@@ -20,7 +20,6 @@ jobs:
       publishJUnitResults: true
       testResultsFiles: '**/surefire-reports/TEST-*.xml'
       goals: 'clean test'
-
   - task: PublishCodeCoverageResults@1
     inputs:
         codeCoverageTool: 'JaCoCo'
@@ -28,11 +27,6 @@ jobs:
         pathToSources: '$(System.DefaultWorkingDirectory)/src/main/java/'
         reportDirectory: '$(System.DefaultWorkingDirectory)/target/site/jacoco'
         failIfCoverageEmpty: true
-
-- job: CodeReview
-  displayName: 'Code Review'
-  dependsOn: Build
-  steps:
   - task: SonarCloudPrepare@1
     displayName: 'SonarCloud Prepare'
     inputs:
@@ -41,7 +35,7 @@ jobs:
       scannerMode: 'Other'
       projectKey: 'Psep_microservicio-spring'
       projectName: 'microservicio-spring'
-  
+
   - task: Maven@3
     inputs:
       mavenPomFile: 'pom.xml'
@@ -53,11 +47,6 @@ jobs:
       testResultsFiles: '**/surefire-reports/TEST-*.xml'
       goals: 'clean package'
       sonarQubeRunAnalysis: true
-  
-- job: Deploy
-  displayName: 'Deploy'
-  dependsOn: CodeReview
-  steps:
   - task: Docker@2
     inputs:
       containerRegistry: 'Docker Hub Psep'
