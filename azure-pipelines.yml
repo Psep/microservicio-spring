@@ -1,20 +1,22 @@
 trigger:
 - feature-ms-pabloSepulveda-mensaje
 
-pool:
-  vmImage: ubuntu-latest
-
-steps:
-- script: |
+jobs:
+- job: Build
+  displayName: 'Build'
+  pool:
+   vmImage: ubuntu-latest
+  steps:
+  - script: |
       git fetch --unshallow
-  displayName: 'convert to non-shallow clone' 
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+    displayName: 'convert to non-shallow clone' 
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'
+      mavenOptions: '-Xmx3072m'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.8'
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: true
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      goals: 'package'
