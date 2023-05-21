@@ -91,7 +91,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        jmeter -n -t jmeter/test.jmx -l jmeter/results.jtl
+        /home/psep/labdevops/apache-jmeter-5.5/bin/jmeter -n -t jmeter/test.jmx -l jmeter/results.jtl
         cat jmeter/results.jtl
 
 #  - task: TaurusRunner@0
