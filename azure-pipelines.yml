@@ -28,5 +28,3 @@ jobs:
         pathToSources: '$(System.DefaultWorkingDirectory)/src/main/java/'
         reportDirectory: '$(System.DefaultWorkingDirectory)/target/site/jacoco'
         failIfCoverageEmpty: true
-    condition: |
-     and(succeeded(), ge(variables['Build.CodeCoverageSummary.lineCoverage'], 85.0))
