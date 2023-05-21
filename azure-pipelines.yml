@@ -61,7 +61,7 @@ jobs:
       Dockerfile: '**/Dockerfile'
 
 - job: Deploy
-  displayName: 'Deploy to Kubernetes'
+  displayName: 'Deploy to Kubernetes and Test'
   dependsOn: BuildAndPublish
   pool: 'Default'
   steps:
@@ -86,19 +86,26 @@ jobs:
       connectionType: 'None'
       command: 'apply'
       arguments: '-f k8s/app-service.yaml'
-    
-  - task: TaurusRunner@0
+  - task: Bash@3
+    displayName: 'Test with JMeter'
     inputs:
-      taurusConfig: |
-        execution:
-         - scenario:
-             requests:
-              script: test.jmx
-      jmeterHome: '/home/psep/labdevops/apache-jmeter-5.5'
-      jmeterPath: '/home/psep/labdevops/apache-jmeter-5.5/bin'
-      jmeterVersion: '5.5'
-      outputDir: 'taurus-output'
+      targetType: 'inline'
+      script: |
+        jmeter -n -t jmeter/test.jmx -l jmeter/results.jtl
+        cat jmeter/results.jtl
+
+#  - task: TaurusRunner@0
+#    inputs:
+#      taurusConfig: |
+#        execution:
+#         - scenario:
+#             requests:
+#              script: test.jmx
+#      jmeterHome: '/home/psep/labdevops/apache-jmeter-5.5'
+#      jmeterPath: '/home/psep/labdevops/apache-jmeter-5.5/bin'
+#      jmeterVersion: '5.5'
+#      outputDir: 'taurus-output'
       
-  - script: jmeter -n -t $(System.DefaultWorkingDirectory)/jmeter/test.jmx -l $(System.DefaultWorkingDirectory)/results.jtl
+#  - script: jmeter -n -t $(System.DefaultWorkingDirectory)/jmeter/test.jmx -l $(System.DefaultWorkingDirectory)/results.jtl
 
   
