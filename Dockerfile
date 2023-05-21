@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM eclipse-temurin:11
 
 USER 185
 VOLUME /tmp
