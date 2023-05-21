@@ -17,7 +17,7 @@ jobs:
       jdkArchitectureOption: 'x64'
       publishJUnitResults: true
       testResultsFiles: '**/surefire-reports/TEST-*.xml'
-      goals: 'clean test'
+      goals: 'clean test jacoco:report'
   - task: PublishCodeCoverageResults@1
     displayName: 'Publish code coverage results (JaCoCo)'
     inputs:
@@ -31,6 +31,7 @@ jobs:
     inputs:
       checkCoverage: true
       coverageFailOption: 'fixed'
+      coverageType: lines
       coverageThreshold: 85
   - task: SonarCloudPrepare@1
     displayName: 'SonarCloud Prepare'
