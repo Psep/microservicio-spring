@@ -8,7 +8,7 @@ jobs:
    vmImage: ubuntu-latest
   steps:
   - task: Maven@3
-    displayName: 'Build and test'
+    displayName: 'Build'
     inputs:
       mavenPomFile: 'pom.xml'
       mavenOptions: '-Xmx3072m'
@@ -70,21 +70,21 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        cat app-deployment.yaml
+        cat k8s/app-deployment.yaml
         echo "Change tag image in deployment file"
-        sed -i "s|_tag_|$(Build.BuildId)|g" app-deployment.yaml
-        cat app-deployment.yaml
+        sed -i "s|_tag_|$(Build.BuildId)|g" k8s/app-deployment.yaml
+        cat k8s/app-deployment.yaml
   - task: Kubernetes@1
     displayName: 'Deploy application'
     inputs:
       connectionType: 'None'
       command: 'apply'
-      arguments: '-f app-deployment.yaml'
+      arguments: '-f k8s/app-deployment.yaml'
   - task: Kubernetes@1
     displayName: 'Apply app service'
     inputs:
       connectionType: 'None'
       command: 'apply'
-      arguments: '-f app-service.yaml'
+      arguments: '-f k8s/app-service.yaml'
 
   
